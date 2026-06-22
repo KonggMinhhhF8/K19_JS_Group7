@@ -379,6 +379,11 @@
         </div>
 
         <script>
+            const accessToken = localStorage.getItem("accessToken");
+
+            if (!accessToken) {
+                window.location.href = "./login/index.html";
+            }
             const menuToggle = document.getElementById("menuToggle");
             const sidebar = document.getElementById("sidebar");
             const overlay = document.getElementById("overlay");
