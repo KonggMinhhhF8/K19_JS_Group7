@@ -305,19 +305,70 @@ const API_BASE_URL =
 let customers = [];
 let editingCustomerId = null;
 
+async function refreshAccessToken() {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    if (!refreshToken) {
+        throw new Error("Không có refresh token");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            refreshToken: refreshToken,
+        }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Refresh token hết hạn");
+    }
+
+    localStorage.setItem("accessToken", result.accessToken);
+
+    return result.accessToken;
+}
+
+function logoutToLogin() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+
+    window.location.href = "../login/index.html";
+}
+
 async function fetchCustomers() {
     try {
-        const response = await fetch(`${API_BASE_URL}/customers`, {
+        let token = localStorage.getItem("accessToken");
+
+        let response = await fetch(`${API_BASE_URL}/customers`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${token}`,
             },
         });
 
-        const result = await response.json();
-        console.log("Status:", response.status);
-        console.log("Result:", result);
+        let result = await response.json();
+
+        if (!response.ok && result.message === "token expired") {
+            const newAccessToken = await refreshAccessToken();
+
+            response = await fetch(`${API_BASE_URL}/customers`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${newAccessToken}`,
+                },
+            });
+
+            result = await response.json();
+        }
 
         if (!response.ok) {
             throw new Error(
@@ -329,7 +380,7 @@ async function fetchCustomers() {
         renderCustomers(customers);
     } catch (error) {
         console.error(error);
-        alert(error.message);
+        logoutToLogin();
     }
 }
 
