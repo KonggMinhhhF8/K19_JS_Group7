@@ -4,6 +4,14 @@ if (!accessToken) {
     window.location.href = "../login/index.html";
 }
 
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", function () {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "../login/index.html";
+    });
+}
+
 function openModal() {
     document.getElementById("modal").style.display = "flex";
 }

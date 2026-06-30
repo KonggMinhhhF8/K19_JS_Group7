@@ -31,6 +31,9 @@ body {
     position: sticky;
     top: 0;
     height: 100vh;
+
+    display: flex;
+    flex-direction: column;
 }
 .sidebar h2 {
     margin-bottom: 40px;
@@ -336,4 +339,32 @@ small {
 
 .btn-delete:hover {
     background: #fdecea;
+}
+
+.logout-btn {
+    width: 100%;
+    margin-top: auto;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #ecf0f1;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.3s;
+}
+
+.logout-btn i {
+    width: 20px;
+    font-size: 18px;
+}
+
+.logout-btn:hover {
+    background: #34495e;
+    color: #3498db;
 }

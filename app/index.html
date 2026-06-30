@@ -56,12 +56,23 @@
                 list-style: none;
             }
             .sidebar ul li {
-                padding: 12px;
+                padding: 15px;
                 cursor: pointer;
                 border-radius: 8px;
                 margin-bottom: 5px;
-                display: flex;
-                align-items: center;
+                color: #ecf0f1;
+                transition: 0.3s;
+            }
+            .sidebar ul li:hover,
+            .sidebar ul li.active {
+                background: #34495e;
+                color: var(--primary-color);
+            }
+
+            .sidebar ul li a {
+                color: inherit;
+                text-decoration: none;
+                display: block;
             }
             .sidebar ul li i {
                 margin-right: 15px;
@@ -248,12 +259,6 @@
                 background: #34495e;
                 color: #3498db;
             }
-
-            .sidebar ul li a {
-                color: inherit;
-                text-decoration: none;
-                display: block;
-            }
         </style>
     </head>
     <body>
@@ -266,12 +271,26 @@
                     <li class="active">
                         <i class="fas fa-home"></i> Tổng quan
                     </li>
-                    <li><i class="fas fa-box"></i> Sản phẩm</li>
-                    <li><i class="fas fa-shopping-bag"></i> Đơn hàng</li>
+                    <li>
+                        <a href="./products/index.html">
+                            <i class="fas fa-box"></i> Sản phẩm
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./orders/index.html">
+                            <i class="fas fa-shopping-bag"></i> Đơn hàng
+                        </a>
+                    </li>
                     <li>
                         <a href="./customers/index.html">
                             <i class="fas fa-users"></i>
                             Khách hàng
+                        </a>
+                    </li>
+                    <li>
+                        <a href="./reports/index.html">
+                            <i class="fas fa-users"></i>
+                            Báo cáo
                         </a>
                     </li>
                 </ul>
