@@ -146,7 +146,7 @@ const renderOrderContentsTable = (data) => {
             spanStatusEl.innerText = 'Đã hủy'
             spanStatusEl.setAttribute('class', 'badge cancelled')
             button1El.setAttribute('title', 'Xem chi tiết')
-            i1.setAttribute('class', 'fas fa-eye')
+            i1El.setAttribute('class', 'fas fa-eye')
             button1El.append(i1El)
             tdActionEl.append(button1El)
         }

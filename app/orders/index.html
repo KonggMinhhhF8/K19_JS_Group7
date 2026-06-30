@@ -73,6 +73,7 @@
       .btn-action { border: none; background: #f0f2f5; padding: 8px; border-radius: 6px; cursor: pointer; color: #555; transition: 0.2s; }
       .btn-action:hover { background: var(--primary-color); color: white; }
       .btn-export { background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+      .btn-create-order { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
       small { color: #7f8c8d; display: block; margin-top: 2px; }
   </style>
@@ -96,7 +97,10 @@
       <div class="search-bar">
         <input type="text" placeholder="Tìm mã đơn, tên khách hàng...">
       </div>
-      <button class="btn-export"><i class="fas fa-download"></i> Xuất Excel</button>
+      <div>
+        <button class="btn-create-order">Tạo đơn hàng</button>
+        <button class="btn-export"><i class="fas fa-download"></i> Xuất Excel</button>
+      </div>
     </header>
 
     <section class="stats">
@@ -119,7 +123,7 @@
     </section>
 
     <section class="table-container">
-      <div class="order-controls">
+      <!-- <div class="order-controls">
         <div class="tabs">
           <button class="tab active">Tất cả</button>
           <button class="tab">Chờ xử lý</button>
@@ -187,7 +191,7 @@
           </td>
         </tr>
         </tbody>
-      </table>
+      </table> -->
     </section>
   </main>
 </div>
