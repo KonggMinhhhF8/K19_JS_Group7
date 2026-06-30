@@ -309,3 +309,31 @@ small {
 .btn-save:hover {
     background: #2c80b8;
 }
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 60px;
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.empty-state h3 {
+    margin-bottom: 8px;
+    color: var(--dark-color);
+}
+
+.empty-state p {
+    color: #7f8c8d;
+}
+
+.btn-delete {
+    color: #e74c3c;
+}
+
+.btn-delete:hover {
+    background: #fdecea;
+}
