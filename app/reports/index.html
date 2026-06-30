@@ -216,7 +216,7 @@
                 <h2>ShopAdmin</h2>
                 <ul>
                     <li>
-                        <a href="./index.html"
+                        <a href="../index.html"
                             ><i class="fas fa-home"></i> Tổng quan</a
                         >
                     </li>
@@ -348,6 +348,16 @@
         </div>
 
         <script>
+            function requireAuth() {
+                const accessToken = localStorage.getItem("accessToken");
+
+                if (!accessToken) {
+                    window.location.href = "../login/index.html";
+                }
+            }
+
+            requireAuth();
+
             if (logoutBtn) {
                 logoutBtn.addEventListener("click", function () {
                     localStorage.removeItem("accessToken");
