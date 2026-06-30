@@ -1,8 +1,12 @@
-const accessToken = localStorage.getItem("accessToken");
+function requireAuth() {
+    const accessToken = localStorage.getItem("accessToken");
 
-if (!accessToken) {
-    window.location.href = "../login/index.html";
+    if (!accessToken) {
+        window.location.href = "../login/index.html";
+    }
 }
+
+requireAuth();
 
 if (logoutBtn) {
     logoutBtn.addEventListener("click", function () {
