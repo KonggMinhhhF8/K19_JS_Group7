@@ -46,6 +46,29 @@
     </section>
   </main>
 </div>
+<!--<div id="productModal" class="modal" style="display: none">-->
+<!--  <div class="modal-content">-->
+<!--    <h3 id="modalTitle">Thêm sản phẩm mới</h3>-->
+<!--    <form id="productForm">-->
+<!--      <input type="hidden" id="inputId">-->
+
+<!--      <input type="text" id="inputName" placeholder="Tên sản phẩm" required>-->
+<!--      <input type="text" id="inputSku" placeholder="Mã SKU" required>-->
+<!--      <input type="number" id="inputPrice" placeholder="Giá bán" required>-->
+<!--      <input type="number" id="inputStock" placeholder="Số lượng tồn kho" required>-->
+
+<!--      <select id="inputCategory" required>-->
+<!--        <option value="">&#45;&#45; Chọn danh mục &#45;&#45;</option>-->
+<!--      </select>-->
+
+<!--      <div class="modal-buttons">-->
+<!--        <button type="button" class="btn-cancel">Hủy</button>-->
+<!--        <button type="submit" class="btn-add" id="btnSaveProduct">Lưu sản phẩm</button>-->
+<!--      </div>-->
+<!--    </form>-->
+<!--  </div>-->
+<!--</div>-->
+
 <div id="productModal" class="modal" style="display: none">
   <div class="modal-content">
     <h3 id="modalTitle">Thêm sản phẩm mới</h3>
@@ -60,6 +83,18 @@
       <select id="inputCategory" required>
         <option value="">-- Chọn danh mục --</option>
       </select>
+
+      <!-- NEW: vùng upload ảnh -->
+      <div class="form-group">
+        <label>Hình ảnh sản phẩm</label>
+        <div class="image-upload" onclick="document.getElementById('modalFileInput').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Nhấp để tải ảnh lên</p>
+          <input type="file" id="modalFileInput" accept="image/*" hidden>
+          <img id="modalImgPreview" class="preview-img" src="#" alt="Preview" style="display:none; max-width:120px; margin-top:8px;">
+        </div>
+      </div>
+      <!-- END NEW -->
 
       <div class="modal-buttons">
         <button type="button" class="btn-cancel">Hủy</button>
