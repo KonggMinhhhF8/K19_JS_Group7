@@ -1,30 +1,31 @@
-import { renderSidebar } from "../components/sidebar.js";
 import { renderReportStats } from "../components/reportStats.js";
 import { renderTable } from "../components/table.js";
-import { SIDEBAR_ITEMS } from "../constants/sidebar.js";
 import { TOP_PRODUCT_HEADERS } from "../constants/reportHeaders.js";
 import { formatCurrency } from "../utils/formatCurrency.js";
 import { initRevenueChart, initCategoryChart } from "../utils/chartHelper.js";
 
-import axiosClient from "../utils/axiosClient.js";
-
 const BASE_URL = "https://wo365ovs53.execute-api.ap-southeast-1.amazonaws.com";
 // get elements
-const sidebarContainer = document.getElementById("sidebar");
 const statsContainer = document.getElementById("stats-container");
 const tableContainer = document.getElementById("top-products-table");
+const logoutBtn = document.getElementById("logoutBtn");
 
 async function init() {
-    // Render Sidebar
-    const reportMenu = SIDEBAR_ITEMS.map((item) => ({
-        ...item,
-        active: item.text === "Báo cáo",
-    }));
-    if (sidebarContainer) sidebarContainer.append(renderSidebar(reportMenu));
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.href = "../login/index.html";
+        });
+    }
 
     try {
-        // fetch api
         const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+            window.location.href = "../login/index.html";
+        }
+
+        // fetch api
         const [ordersRes, productsRes, categoriesRes] = await Promise.all([
             fetch(`${BASE_URL}/orders`, {
                 headers: {
@@ -175,7 +176,7 @@ async function init() {
             });
             initCategoryChart("categoryChart", catLabels, catValues);
         } catch (chartError) {
-            console.error("Lỗi thư viện Canvas biểu đồ tròn:", chartError);
+            console.error(chartError);
         }
 
         // best-selling products

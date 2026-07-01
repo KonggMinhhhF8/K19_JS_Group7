@@ -1,35 +1,41 @@
-import { renderCards } from "../components/card.js";
-import { renderSidebar } from "../components/sidebar.js";
-import { renderTable } from "../components/table.js";
-import { ORDER_HEADERS } from "../constants/orderTable.js";
-import { formatCurrency } from "../utils/formatCurrency.js";
-
-import axiosClient from "../utils/axiosClient.js";
+import { renderCards } from "./components/card.js";
+import { renderTable } from "./components/table.js";
+import { ORDER_HEADERS } from "./constants/orderTable.js";
+import { formatCurrency } from "./utils/formatCurrency.js";
 
 const BASE_URL = "https://wo365ovs53.execute-api.ap-southeast-1.amazonaws.com";
 
 // DOM Elements
 const tableContainer = document.querySelector("#order-table");
 const statsContainer = document.querySelector(".stats");
+
 const menuToggle = document.getElementById("menuToggle");
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
+const logoutBtn = document.getElementById("logoutBtn");
 
-// Toggle Sidebar Mobile
-const toggleMenu = () => {
+function toggleMenu() {
     sidebar.classList.toggle("active");
     overlay.classList.toggle("active");
-};
+}
 
-menuToggle.addEventListener("click", toggleMenu);
-overlay.addEventListener("click", toggleMenu);
-
+// init
 async function init() {
-    // Render sidebar
-    sidebar.append(renderSidebar());
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.href = "./login/index.html";
+        });
+    }
+    menuToggle.addEventListener("click", toggleMenu);
+    overlay.addEventListener("click", toggleMenu);
 
     try {
         const accessToken = localStorage.getItem("accessToken");
+        if (!accessToken) {
+            window.location.href = "./login/index.html";
+        }
 
         const res = await fetch(`${BASE_URL}/orders`, {
             headers: {
