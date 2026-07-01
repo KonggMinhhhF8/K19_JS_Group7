@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chỉnh sửa sản phẩm | ShopAdmin</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar" id="sidebar"></aside>
+
+  <main class="main-content">
+    <div class="header-actions">
+      <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
+      <h2>Chỉnh sửa sản phẩm</h2>
+    </div>
+
+    <form id="productForm">
+      <div class="product-grid">
+        <div class="left-col">
+          <div class="card">
+            <h3>Thông tin chung</h3>
+            <div class="form-group">
+              <label>Tên sản phẩm</label>
+              <input type="text" id="inputName" placeholder="Ví dụ: iPhone 15 Pro Max">
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Giá cả & Kho hàng</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div class="form-group">
+                <label>Giá bán (VNĐ)</label>
+                <input type="number" id="inputPrice" placeholder="Nhập giá bán">
+              </div>
+              <div class="form-group">
+                <label>Giá vốn (VNĐ)</label>
+                <input type="number" value="28000000">
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div class="form-group">
+                <label>Mã SKU</label>
+                <input type="text" id="inputSku" placeholder="Ví dụ: IP15PM-BLUE-256">
+              </div>
+              <div class="form-group">
+                <label>Số lượng tồn kho</label>
+                <input type="number" id="inputStock" placeholder="Nhập số lượng">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="card">
+            <h3>Hình ảnh sản phẩm</h3>
+            <div class="image-upload" onclick="document.getElementById('fileInput').click()">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Nhấp để tải ảnh lên</p>
+              <input type="file" id="fileInput" hidden onchange="previewImage(event)">
+              <img id="imgPreview" class="preview-img" src="#" alt="Preview">
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Phân loại</h3>
+            <div class="form-group">
+              <label>Danh mục</label>
+              <select id="inputCategory">
+                <option>Điện thoại</option>
+                <option>Máy tính bảng</option>
+                <option>Phụ kiện</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trạng thái</label>
+              <select>
+                <option>Đang bán</option>
+                <option>Ngừng kinh doanh</option>
+                <option>Hết hàng</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-footer">
+        <button type="button" class="btn btn-cancel" onclick="window.location.href='index.html'">Hủy bỏ</button>
+        <button type="submit" class="btn btn-save">Lưu thay đổi</button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<script>
+  function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      const output = document.getElementById('imgPreview');
+      output.src = reader.result;
+      output.style.display = 'block';
+    }
+    reader.readAsDataURL(event.target.files[0]);
+  }
+</script>
+<script type="module" src="./products.js"></script>
+</body>
+</html>
