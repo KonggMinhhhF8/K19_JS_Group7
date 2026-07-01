@@ -1,4 +1,3 @@
-// create 2026/03/28 by nguyen_tokyo
 import {
     checkAuth, getData, createData, updateData, deleteData,
     setupSearch, renderTable, renderSidebar, summary
