@@ -111,22 +111,6 @@ export function summary(title, value, color) {
     `;
 }
 
-// summaryReport
-export function summaryReport(title, value, trendText, isUp) {
-    const trendClass = isUp ? "up" : "down";
-    const iconClass = isUp ? "fa-arrow-up" : "fa-arrow-down";
-
-    return `
-        <div class="stat-card">
-            <h4>${title}</h4>
-            <div class="value">${value}</div>
-            <div class="trend ${trendClass}">
-                <i class="fas ${iconClass}"></i> ${trendText}
-            </div>
-        </div>
-    `;
-}
-
 export function renderTable(tableId, configs, data) {
     const table = document.getElementById(tableId);
     if (!table) return;
