@@ -228,6 +228,16 @@
         </div>
 
         <script>
+            function requireAuth() {
+                const accessToken = localStorage.getItem("accessToken");
+
+                if (!accessToken) {
+                    window.location.href = "../login/index.html";
+                }
+            }
+
+            requireAuth();
+
             if (logoutBtn) {
                 logoutBtn.addEventListener("click", function () {
                     localStorage.removeItem("accessToken");
