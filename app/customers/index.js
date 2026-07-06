@@ -1,3 +1,5 @@
+import { refreshAccessToken } from "../shared/auth.js";
+
 function requireAuth() {
     const accessToken = localStorage.getItem("accessToken");
 
@@ -8,6 +10,7 @@ function requireAuth() {
 
 requireAuth();
 
+const logoutBtn = document.getElementById("logoutBtn");
 if (logoutBtn) {
     logoutBtn.addEventListener("click", function () {
         localStorage.removeItem("accessToken");
@@ -42,7 +45,7 @@ async function addCustomer() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
             body: JSON.stringify({
                 name,
@@ -94,7 +97,7 @@ async function updateCustomer() {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
                 body: JSON.stringify({
                     name,
@@ -170,7 +173,7 @@ async function deleteCustomer(id) {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`,
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
             },
         });
 
@@ -309,34 +312,6 @@ const API_BASE_URL =
 let customers = [];
 let editingCustomerId = null;
 
-async function refreshAccessToken() {
-    const refreshToken = localStorage.getItem("refreshToken");
-
-    if (!refreshToken) {
-        throw new Error("Không có refresh token");
-    }
-
-    const response = await fetch(`${API_BASE_URL}/auth/refresh-token`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            refreshToken: refreshToken,
-        }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-        throw new Error(result.message || "Refresh token hết hạn");
-    }
-
-    localStorage.setItem("accessToken", result.accessToken);
-
-    return result.accessToken;
-}
-
 function logoutToLogin() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -345,6 +320,13 @@ function logoutToLogin() {
 
     window.location.href = "../login/index.html";
 }
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.submitCustomerForm = submitCustomerForm;
+window.searchCustomer = searchCustomer;
+window.openEditCustomer = openEditCustomer;
+window.deleteCustomer = deleteCustomer;
 
 async function fetchCustomers() {
     try {
