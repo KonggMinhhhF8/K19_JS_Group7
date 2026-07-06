@@ -33,6 +33,7 @@ const countStatusArr = {
     done : 0
 }
 
+
 let currentSatus = 'all'
 let currentData = ''
 
@@ -94,8 +95,10 @@ const loadDataTable = (data, tbodyEl) => {
         const tdActionEl = document.createElement('td')
         const button1El = document.createElement('button')
         const button2El = document.createElement('button')
+        const button3El = document.createElement('button')
         button1El.setAttribute('class', 'btn-action')
         button2El.setAttribute('class', 'btn-action')
+        button3El.setAttribute('class', 'btn-action')
         if(row.status === 'done') {
             const i1El = document.createElement('i')
             const i2El = document.createElement('i')
@@ -107,6 +110,9 @@ const loadDataTable = (data, tbodyEl) => {
             i2El.setAttribute('class', 'fas fa-print')
             button1El.append(i1El)
             button2El.append(i2El)
+            button1El.addEventListener('click', () => {
+                openOrderDetailModal(row)
+            })
             tdActionEl.append(button1El)
             tdActionEl.append(button2El)
         } else if(row.status === 'pending'){
@@ -119,7 +125,17 @@ const loadDataTable = (data, tbodyEl) => {
             button2El.setAttribute('title', 'Hủy đơn')
             i2El.setAttribute('class', 'fas fa-times')
             button1El.append(i1El)
+            button1El.addEventListener('click', async () => {
+                if(window.confirm('Do you agree to confirm the order?')) {
+                    await updateStatusOrder('delivering', row)
+                }
+            })
             button2El.append(i2El)
+            button2El.addEventListener('click', async () => {
+                if(window.confirm('Do you agree to confirm the order?')) {
+                    await updateStatusOrder('cancel', row)
+                }
+            })
             tdActionEl.append(button1El)
             tdActionEl.append(button2El)
         } else if(row.status === 'delivering'){
@@ -133,6 +149,9 @@ const loadDataTable = (data, tbodyEl) => {
             i2El.setAttribute('class', 'fas fa-print')
             button1El.append(i1El)
             button2El.append(i2El)
+            button1El.addEventListener('click', () => {
+                openOrderDetailModal(row)
+            })
             tdActionEl.append(button1El)
             tdActionEl.append(button2El)
         } else if (row.status === 'cancel'){
@@ -142,8 +161,20 @@ const loadDataTable = (data, tbodyEl) => {
             button1El.setAttribute('title', 'Xem chi tiết')
             i1El.setAttribute('class', 'fas fa-eye')
             button1El.append(i1El)
+            button1El.addEventListener('click', () => {
+                openOrderDetailModal(row)
+            })
             tdActionEl.append(button1El)
         }
+        const i3El = document.createElement('i')
+        i3El.setAttribute('class', 'fas fa-pencil')
+        button3El.append(i3El)
+        button3El.addEventListener('click', () => {
+            window.location.href = `create-order.html?id=${row.id}`
+            localStorage.setItem('order', JSON.stringify(row))
+        })
+        tdActionEl.append(button3El)
+
         tdStatusEl.append(spanStatusEl)
         trEl.append(tdStatusEl)
         trEl.append(tdActionEl)
@@ -291,6 +322,103 @@ const onCreateOrder = () => {
     }
 }
 
+const updateStatusOrder = async (newStatus, order = {}) => {
+    const data = {
+        productId: order.product.id,
+        customerId: order.customer.id,
+        amount: order.amount,
+        status: newStatus
+    }
+    try {
+        const res =  await orderService.putOrders(data, order.id)
+        window.alert('Sucess!')
+        window.location.reload()
+    } catch (error) {
+        window.alert('Error!')
+    }
+} 
+
+const openOrderDetailModal = (row) => {
+    document.getElementById('modal-title').innerText = `Chi tiết đơn hàng #${row.id}`
+    document.getElementById('modal-customer-name').innerHTML = `<strong>Khách hàng:</strong> ${row.customer.name}`
+    document.getElementById('modal-customer-phone').innerHTML = `<strong>Số điện thoại:</strong> ${row.customer.phone}`
+    document.getElementById('modal-product-name').innerHTML = `<strong>Sản phẩm:</strong> ${row.product.name}`
+    document.getElementById('modal-product-price').innerHTML = `<strong>Đơn giá:</strong> ${Number(row.product.price).toLocaleString('vi')} đ`
+    document.getElementById('modal-amount').innerHTML = `<strong>Số lượng:</strong> ${row.amount}`
+    
+    const total = Number(row.product.price) * Number(row.amount);
+    document.getElementById('modal-total').innerHTML = `Tổng tiền: ${total.toLocaleString('vi')} đ`
+
+    document.getElementById('order-detail-modal').style.display = 'flex'
+}
+
+const createOrderDetailModal = () => {
+    const orderDetailModal = document.createElement('div')
+    orderDetailModal.setAttribute('id', 'order-detail-modal')
+    orderDetailModal.setAttribute('class', 'modal-overlay')
+    orderDetailModal.style.display = 'none'
+    const modalContent = document.createElement('div')
+    modalContent.setAttribute('class', 'modal-content')
+    const modalHeader = document.createElement('div')
+    modalHeader.setAttribute('class', 'modal-header')
+    
+    const modalTitle = document.createElement('h3')
+    modalTitle.setAttribute('id', 'modal-title')
+    
+    const btnCloseModal = document.createElement('button')
+    btnCloseModal.setAttribute('class', 'btn-close')
+    
+    const iEl = document.createElement('i')
+    iEl.setAttribute('class', 'fas fa-times')
+    btnCloseModal.append(iEl)
+    modalHeader.append(modalTitle)
+    modalHeader.append(btnCloseModal)
+    const modalBody = document.createElement('div')
+    modalBody.setAttribute('class', 'modal-body')
+    
+    const modalCustomerName = document.createElement('p')
+    modalCustomerName.setAttribute('id', 'modal-customer-name')
+    
+    const modalCustomerPhone = document.createElement('p')
+    modalCustomerPhone.setAttribute('id', 'modal-customer-phone')
+    
+    const line1 = document.createElement('hr')
+    
+    const modalProductName = document.createElement('p')
+    modalProductName.setAttribute('id', 'modal-product-name')
+    
+    const modalProductPrice = document.createElement('p')
+    modalProductPrice.setAttribute('id', 'modal-product-price')
+    
+    const modalAmount = document.createElement('p')
+    modalAmount.setAttribute('id', 'modal-amount')
+    const line2 = document.createElement('hr')
+    
+    const modalTotal = document.createElement('h4')
+    modalTotal.setAttribute('id', 'modal-total')
+    modalTotal.setAttribute('style', 'text-align: right; color: #e74c3c;')
+
+    modalBody.append(modalCustomerName)
+    modalBody.append(modalCustomerPhone)
+    modalBody.append(line1)
+    modalBody.append(modalProductName)
+    modalBody.append(modalProductPrice)
+    modalBody.append(modalAmount)
+    modalBody.append(line2)
+    modalBody.append(modalTotal)
+    modalContent.append(modalHeader)
+    modalContent.append(modalBody)
+    orderDetailModal.append(modalContent)
+
+    btnCloseModal.addEventListener('click', () => {
+        orderDetailModal.style.display = 'none'
+    })
+    orderDetailModal.addEventListener('click', (e) => {
+        if (e.target === orderDetailModal) orderDetailModal.style.display = 'none'
+    })
+
+    document.body.append(orderDetailModal)
+}
 
 const init = async () => {
     onLogout()
@@ -298,5 +426,6 @@ const init = async () => {
     onSearch()
     loadDataOrderStatus(data)
     onCreateOrder()
+    createOrderDetailModal()
 }
 init()

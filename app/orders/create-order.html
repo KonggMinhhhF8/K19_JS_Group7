@@ -424,7 +424,7 @@
       }
     }
 
-    const onSubmit = () => {
+    const onSubmit = (request, id) => {
       const formEl = document.getElementById('create-order-form')
       formEl.addEventListener('submit', async (e) => {
         e.preventDefault()
@@ -442,14 +442,41 @@
         }
 
         try {
-          const res = await orderService.postOrders(orderData)
-          alert('Tạo đơn hàng thành công!')
-          window.location.href = 'index.html'
+          if(request === true) {
+            const res = await orderService.postOrders(orderData)
+            alert('Order successfully created!')
+            window.location.href = 'index.html'
+          }
+          else {
+            const res = await orderService.putOrders(orderData, id)
+            alert('Order successfully updated!')
+            window.location.href = 'index.html'
+          }
         } catch (error) {
-          console.error('Lỗi tạo đơn:', error);
+          console.error('Lỗi:', error);
           submitBtnEl.disabled = false
         }
       })
+    }
+
+    const onUpdateOrder = async (id) => {
+        const saveData = localStorage.getItem('order')
+        const dataCurrent = JSON.parse(saveData)
+
+        if (dataCurrent.id != id) window.alert('Error non-duplicate data !')
+
+        const mainContent = document.querySelector('.main-content')
+        const h2El = mainContent.querySelector('h2')
+        h2El.innerText = `Chỉnh sửa khách hàng: ${dataCurrent.customer.name}`
+        customerSelectEl.value = dataCurrent.customer.id
+        productSelectEl.value = dataCurrent.product.id
+        amountInputEl.value = dataCurrent.amount
+        statusEl.value = dataCurrent.status
+        productSelectEl.dispatchEvent(new Event('change'))
+        const formEl = document.querySelector('#create-order-form')
+        const submitBtnEl = formEl.querySelector('.btn-submit')
+        submitBtnEl.innerText = 'Sửa đơn hàng'
+        onSubmit(false, String(id))
     }
     
     const onLogout = () => {
@@ -468,7 +495,13 @@
         const products = await productService.fetchProducts()
         const customers = await customerService.fetchCustomers()
         loadDataCreateOrder(customers, products)
-        onSubmit()
+        const ulrPramas = new URLSearchParams(window.location.search)
+        const editOrderId = ulrPramas.get('id')
+        if (editOrderId) {
+          onUpdateOrder(editOrderId)
+        }
+        else 
+          onSubmit(true)
       }
 
       init()
