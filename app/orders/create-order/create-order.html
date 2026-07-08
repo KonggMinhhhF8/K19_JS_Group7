@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Orders</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --dark-color: #2c3e50;
+      --bg-color: #f4f7f6;
+      --success: #27ae60;
+      --danger: #e74c3c;
+      --warning: #f39c12;
+      --info: #2980b9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--dark-color);
+      color: white;
+      padding: 25px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 40px;
+      text-align: center;
+      color: var(--primary-color);
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      padding: 15px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 5px;
+      color: #ecf0f1;
+      transition: 0.3s;
+    }
+
+    .sidebar ul li:hover,
+    .sidebar ul li.active {
+      background: #34495e;
+      color: var(--primary-color);
+    }
+
+    .sidebar ul li a {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .sidebar ul li i {
+      margin-right: 12px;
+      width: 20px;
+    }
+
+    .logout-btn {
+      width: 100%;
+      margin-top: auto;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #ecf0f1;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: 0.3s;
+    }
+
+    .logout-btn i {
+      width: 20px;
+      font-size: 18px;
+    }
+
+    .logout-btn:hover {
+      background: #34495e;
+      color: #3498db;
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 30px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    header h2 {
+      color: var(--dark-color);
+      font-size: 1.5rem;
+    }
+
+    .form-container {
+      background: white;
+      padding: 35px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin: 0 auto;
+    }
+
+    .form-section-title:first-child {
+      margin-top: 0;
+    }
+
+    .row {
+      display: flex;
+      gap: 25px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .col {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group>label {
+      display: block;
+      font-weight: 600;
+      color: var(--dark-color);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s;
+      font-size: 0.95rem;
+      background: #fcfcfc;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+      background: white;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+      margin-top: 40px;
+      border-top: 1px solid #eee;
+      padding-top: 25px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: 0.3s;
+      border: none;
+    }
+
+    .btn-submit {
+      background: var(--success);
+      color: white;
+      box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+    }
+
+    .btn-submit:hover {
+      background: #219653;
+      box-shadow: 0 6px 15px rgba(39, 174, 96, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+      background: #f0f2f5;
+      color: #555;
+    }
+
+    .btn-cancel:hover {
+      background: #e4e6e9;
+      color: #333;
+    }
+
+    .total-amount {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--danger);
+      text-align: right;
+      margin-top: 10px;
+    }
+
+    h3 {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>ShopAdmin</h2>
+      <ul>
+        <li>
+          <a href="../../index.html">
+            <i class="fas fa-home"></i> Tổng quan
+          </a>
+        </li>
+        <li>
+          <a href="../../products/index.html">
+            <i class="fas fa-box"></i> Sản phẩm
+          </a>
+        </li>
+        <li class="active">
+          <i class="fas fa-shopping-cart"></i> Đơn hàng
+        </li>
+        <li>
+          <a href="../../customers/index.html">
+            <i class="fas fa-users"></i> Khách hàng
+          </a>
+        </li>
+        <li>
+          <a href="../../reports/index.html">
+            <i class="fas fa-chart-line"></i> Báo cáo
+          </a>
+        </li>
+      </ul>
+      <button id="logoutBtn" class="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Đăng xuất</span>
+      </button>
+    </aside>
+    <main class="main-content">
+      <header>
+        <h2>Tạo đơn hàng mới</h2>
+        <button class="btn btn-cancel" onclick="window.location.href='../index.html'"><i class="fas fa-arrow-left"></i>
+          Quay lại danh sách</button>
+      </header>
+
+      <section class="form-container">
+        <form id="create-order-form">
+          <h3 class="form-section-title">Thông tin khách hàng</h3>
+          <div class="row">
+            <div class="col form-group">
+              <label>Chọn khách hàng <span style="color:red">*</span></label>
+              <select id="customer-select" required>
+                <option value="" disabled selected>Đang tải danh sách</option>
+              </select>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">Thông tin sản phẩm</h3>
+          <div class="row">
+            <div class="col form-group">
+              <label>Chọn sản phẩm <span style="color:red">*</span></label>
+              <select id="product-select" required>
+                <option value="" disabled selected>Đang tải danh sách</option>
+              </select>
+            </div>
+
+            <div class="col form-group">
+              <label>Đơn giá</label>
+              <input type="number" id="product-price" required min="0" placeholder="0" readonly
+                style="background: #e9ecef;">
+            </div>
+
+            <div class="col form-group">
+              <label>Số lượng <span style="color:red">*</span></label>
+              <input type="number" id="amount" required min="1" value="1">
+            </div>
+
+            <div class="col form-group">
+              <label>Trạng thái <span style="color:red">*</span></label>
+              <select id="status-select" required>
+                <option value="" disabled selected>Đang tải danh sách</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="total-amount">
+            Tổng cộng: <span id="total-display">0</span>VNĐ
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-cancel" onclick="window.location.href='../index.html'">Huỷ bỏ</button>
+            <button type="submit" class="btn btn-submit"><i class="fas fa-check"></i> Hoàn tất tạo đơn</button>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script type="module">
+    import productService from "../service/productService.js"
+    import customerService from "../service/customerService.js"
+    import orderService from "../service/orderService.js"
+    
+    const statusArr = [
+      {
+        key : 'pending',
+        value: 'Chờ xử lý'
+      },
+      {
+        key : 'cancel',
+        value: 'Đã hủy'
+      },
+      {
+        key : 'delivering',
+        value: 'Đang giao'
+      },
+      {
+        key : 'done',
+        value: 'Hoàn thành'
+      }
+    ]
+
+    const customerSelectEl = document.querySelector('#customer-select')
+    const productSelectEl = document.querySelector('#product-select')
+    const priceInputEl = document.querySelector('#product-price')
+    const amountInputEl = document.querySelector('#amount')
+    const statusEl = document.querySelector('#status-select')
+    const totalDisplayEl = document.querySelector('#total-display')
+  
+
+    const calcTotal = () => {
+      const price = Number(priceInputEl.value) || 0
+      const qty = Number(amountInputEl.value) || 1
+      const total = price * qty
+      totalDisplayEl.innerText = `${total.toLocaleString('vi')}`
+    }
+
+    const loadDataCreateOrder = (customers, products) => {
+      if (customers && customers.length) {
+        customerSelectEl.innerHTML = `'<option value="" disabled selected>-- Chọn khách hàng --</option>'`
+        customers.forEach(customer => {
+          const optionEl = document.createElement('option')
+          optionEl.setAttribute('value', `${customer.id}`)
+          optionEl.innerText = `${customer.name} - ${customer.phone}`
+          customerSelectEl.append(optionEl)
+        });
+      }
+      else customerSelectEl.innerHTML = '<option value="" disabled>Không có dữ liệu</option>'
+      
+      if (products && products.length) {
+        productSelectEl.innerHTML = `'<option value="" disabled selected>-- Chọn sản phẩm --</option>'`
+        products.forEach(product => {
+          const optionEl = document.createElement('option')
+          optionEl.setAttribute('value', `${product.id}`)
+          optionEl.innerText = `${product.name} - ${Number(product.price).toLocaleString('vi')}`
+          productSelectEl.append(optionEl)
+        })
+        } else productSelectEl.innerHTML = '<option value="" disabled>Không có dữ liệu</option>'
+
+        productSelectEl.addEventListener('change', (e) => {
+          const selectedProduct = products.find(p => p.id == e.target.value)
+          if (selectedProduct) {
+            priceInputEl.value = selectedProduct.price
+            calcTotal()
+          }
+        })
+
+        amountInputEl.addEventListener('input', () => {
+          calcTotal()
+        })
+
+      if(statusEl) {
+        statusEl.innerHTML = ''
+        statusArr.forEach(s => {
+          const optionEl = document.createElement('option')
+          optionEl.setAttribute('value', `${s.key}`)
+          optionEl.innerText = `${s.value}`
+          if(s.key === 'pending') optionEl.setAttribute('selected', 'selected')
+          statusEl.append(optionEl)
+        })
+      }
+    }
+
+    const onSubmit = (request, id) => {
+      const formEl = document.getElementById('create-order-form')
+      formEl.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        
+        const submitBtnEl = formEl.querySelector('.btn-submit')
+        const originalBtnText = submitBtnEl.innerHTML
+        submitBtnEl.innerText = 'Đang xử lý'
+        submitBtnEl.disabled = true;
+
+        const orderData = {
+          "productId": productSelectEl.value,
+          "customerId": customerSelectEl.value,
+          "amount": amountInputEl.value,
+          "status": statusEl.value || 'pending'
+        }
+
+        try {
+          if(request === true) {
+            const res = await orderService.postOrders(orderData)
+            alert('Order successfully created!')
+            window.location.href = '../index.html'
+          }
+          else {
+            const res = await orderService.putOrders(orderData, id)
+            alert('Order successfully updated!')
+            window.location.href = '../index.html'
+          }
+        } catch (error) {
+          console.error('Lỗi:', error);
+          submitBtnEl.disabled = false
+        }
+      })
+    }
+
+    const onUpdateOrder = async (id) => {
+        const saveData = localStorage.getItem('order')
+        const dataCurrent = JSON.parse(saveData)
+
+        if (dataCurrent.id != id) window.alert('Error non-duplicate data !')
+
+        const mainContent = document.querySelector('.main-content')
+        const h2El = mainContent.querySelector('h2')
+        h2El.innerText = `Chỉnh sửa khách hàng: ${dataCurrent.customer.name}`
+        customerSelectEl.value = dataCurrent.customer.id
+        productSelectEl.value = dataCurrent.product.id
+        amountInputEl.value = dataCurrent.amount
+        statusEl.value = dataCurrent.status
+        productSelectEl.dispatchEvent(new Event('change'))
+        const formEl = document.querySelector('#create-order-form')
+        const submitBtnEl = formEl.querySelector('.btn-submit')
+        submitBtnEl.innerText = 'Sửa đơn hàng'
+        onSubmit(false, String(id))
+    }
+    
+    const onLogout = () => {
+    const logoutBtn = document.querySelector('#logoutBtn')
+    if (logoutBtn) {
+        logoutBtn.addEventListener("click", function () {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            window.location.href = "../../login/index.html";
+        });
+    }
+}
+
+    const init = async () => {
+        onLogout()
+        const products = await productService.fetchProducts()
+        const customers = await customerService.fetchCustomers()
+        loadDataCreateOrder(customers, products)
+        const ulrPramas = new URLSearchParams(window.location.search)
+        const editOrderId = ulrPramas.get('id')
+        if (editOrderId) {
+          onUpdateOrder(editOrderId)
+        }
+        else 
+          onSubmit(true)
+      }
+
+      init()
+  </script>
+</body>
+
+</html>
