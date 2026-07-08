@@ -1,4 +1,4 @@
-import orderService from "./orderService.js"
+import orderService from "./service/orderService.js"
 
 const data = await orderService.fetchOrders()
 
@@ -170,7 +170,7 @@ const loadDataTable = (data, tbodyEl) => {
         i3El.setAttribute('class', 'fas fa-pencil')
         button3El.append(i3El)
         button3El.addEventListener('click', () => {
-            window.location.href = `create-order.html?id=${row.id}`
+            window.location.href = `create-order/create-order.html?id=${row.id}`
             localStorage.setItem('order', JSON.stringify(row))
         })
         tdActionEl.append(button3El)
@@ -317,7 +317,7 @@ const onCreateOrder = () => {
     const btnCreateOrderEl = document.querySelector('.btn-create-order')
     if(btnCreateOrderEl) {
         btnCreateOrderEl.addEventListener('click', async () => {
-            window.location.href = 'create-order.html'
+            window.location.href = 'create-order/create-order.html'
         })
     }
 }
